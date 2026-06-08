@@ -1,0 +1,30 @@
+{
+  "mentoring": {
+    "leadership_programs": "N/A",
+    "training_grants": [
+      {"source": "Example University; departmental program", "title": "Undergraduate Research Mentorship Program", "duration": "2024--Present"}
+    ],
+    "current_mentees": [
+      {
+        "name": "Alex Doe, BSc",
+        "position": "MSc student, Example University",
+        "period": "09/2024--Present",
+        "project": "Segmentation of medical images with deep learning.",
+        "accomplishments": "",
+        "goals": "Complete an MSc thesis and submit one workshop paper.",
+        "supervision": "Research"
+      }
+    ],
+    "past_mentees": [
+      {
+        "name": "Jamie Roe, BSc",
+        "position": "Research intern, Example University",
+        "period": "06/2023--08/2023",
+        "project": "Built a data pipeline for an imaging study.",
+        "accomplishments": "",
+        "current_position": "MSc student, Other University",
+        "supervision": "Research"
+      }
+    ]
+  }
+}

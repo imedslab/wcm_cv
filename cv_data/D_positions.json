@@ -1,0 +1,11 @@
+{
+  "positions": {
+    "academic": [
+      {"title": "Postdoctoral Researcher", "institution": "Example University, Anytown, ST", "dates": "07/2023--Present"}
+    ],
+    "hospital": [],
+    "other": [
+      {"title": "Research Intern", "institution": "Acme AI Labs, Anytown, ST", "dates": "06/2018--08/2018"}
+    ]
+  }
+}

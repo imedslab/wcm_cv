@@ -1,0 +1,32 @@
+{
+  "research": {
+    "activities": [
+      {"label": "Role \\& Background", "content": "Postdoctoral Researcher in medical image analysis and machine learning."},
+      {"label": "Current Interests", "content": "Deep learning for medical imaging, uncertainty estimation, reproducible evaluation."},
+      {
+        "label": "Key Activities",
+        "content": null,
+        "subitems": [
+          "Developed deep-learning methods for medical image segmentation.",
+          "Released open-source tools for reproducible machine learning."
+        ]
+      }
+    ],
+    "current_funding": "None",
+    "irb_protocols": "N/A",
+    "pending_grants": [],
+    "past_grants": [
+      {
+        "source": "Example Foundation; early-career grant",
+        "title": "Trustworthy AI for Medical Imaging",
+        "costs": "20{,}000\\,€",
+        "duration": "01/2023--12/2023",
+        "pi": "Sam T. Carter",
+        "role": "Principal Investigator",
+        "effort": "20\\%",
+        "goals": "Develop calibrated deep-learning models for medical image analysis."
+      }
+    ],
+    "patents": []
+  }
+}

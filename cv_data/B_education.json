@@ -1,0 +1,11 @@
+{
+  "education": {
+    "academic_degrees": [
+      {"degree": "Doctor of Philosophy, Biomedical Engineering", "institution": "Example University, Anytown, ST", "dates": "09/2019--06/2023", "year": "2023"},
+      {"degree": "Bachelor of Science, Computer Science", "institution": "State College, Othertown, ST", "dates": "09/2015--06/2019", "year": "2019"}
+    ],
+    "other_experiences": [
+      {"description": "Summer School on Machine Learning", "institution": "Example University", "dates": "07/2021-08/2021"}
+    ]
+  }
+}

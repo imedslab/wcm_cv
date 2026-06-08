@@ -1,0 +1,15 @@
+{
+  "educational_contributions": {
+    "primary_courses": [
+      {"terms": "Spring 2024", "institution": "Example University", "course": "BME401 Introduction to Medical Imaging, 3 credits", "role": "Lecturer", "content": "8 lectures, 2 assignments", "audience": "BSc students"}
+    ],
+    "contributions": [
+      {"terms": "Autumn 2023", "institution": "Example University", "course": "BME510 Machine Learning for Healthcare, 3 credits", "role": "Teaching Assistant", "content": "Graded assignments", "audience": "MSc students"}
+    ],
+    "clinical_teaching": "N/A",
+    "administrative": [
+      "Co-designed homework assignments for BME401 (see didactic teaching)."
+    ],
+    "other_outreach": "N/A"
+  }
+}

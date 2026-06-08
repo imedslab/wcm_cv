@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # Fast: pure-Python unit tests, no TeX needed.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync
+      - run: uv run pytest -m "not integration"
+
+  # Full: build the TeX-Live image, compile the real CV, publish the PDF.
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t cvkit .
+      - name: Compile CV
+        run: |
+          mkdir -p out
+          docker run --rm \
+            -v "$PWD/cv_data:/data" \
+            -v "$PWD/out:/out" \
+            cvkit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cv-pdf
+          path: out/cv.pdf
+          if-no-files-found: error

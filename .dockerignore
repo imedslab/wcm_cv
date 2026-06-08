@@ -1,0 +1,15 @@
+# Keep the build context tiny — only the package source is needed.
+.git/
+.github/
+.claude/
+.venv/
+cv_out/
+cv_data/          # mounted at runtime, never baked into the image
+tests/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+*.docx
+Dockerfile
+.dockerignore

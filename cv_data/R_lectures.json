@@ -1,0 +1,11 @@
+{
+  "invited_lectures": {
+    "regional": [
+      {"text": "Deep Learning for Medical Imaging, Departmental Seminar, Example University, Anytown, ST", "year": "2024"}
+    ],
+    "national": [],
+    "international": [
+      {"text": "Trustworthy AI in Healthcare, Example Workshop, Other University, Othertown, Country", "year": "2023"}
+    ]
+  }
+}

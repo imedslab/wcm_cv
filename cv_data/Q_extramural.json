@@ -1,0 +1,16 @@
+{
+  "extramural": {
+    "leadership": [],
+    "boards_regional": [],
+    "boards_national": [],
+    "boards_international": [],
+    "grant_reviewing": [],
+    "editorial": {
+      "editor": "N/A",
+      "board": "N/A"
+    },
+    "ad_hoc_reviewing": [
+      {"text": "\\textit{Example Journal of Medical Imaging}", "dates": "2023--Present"}
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "personal_data": {
+    "office_address": "Dept. of Biomedical Engineering, Example University, 100 University Ave, Anytown, ST 00000",
+    "office_telephone": "N/A",
+    "home_address": "N/A",
+    "cell_phone": "N/A",
+    "email_work": "sam.carter@example.edu",
+    "email_personal": "sam.carter@example.com",
+    "work_visa": "No",
+    "visa_type": "N/A"
+  }
+}

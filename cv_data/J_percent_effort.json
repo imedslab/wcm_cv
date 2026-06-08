@@ -1,0 +1,12 @@
+{
+  "percent_effort": {
+    "note": "If joining WCM, report anticipated effort; if already WCM employed, report only WCM effort.",
+    "rows": [
+      {"activity": "Teaching",       "effort": "0\\%",   "involves_trainees": "No"},
+      {"activity": "Clinical",       "effort": "0\\%",   "involves_trainees": "No"},
+      {"activity": "Administrative", "effort": "0\\%",   "involves_trainees": "No"},
+      {"activity": "Research",       "effort": "100\\%", "involves_trainees": "Yes"}
+    ],
+    "total": "100\\%"
+  }
+}

@@ -1,0 +1,31 @@
+# Build output (regenerate with `make pdf`)
+cv_out/
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Stray LaTeX artifacts (compilation normally happens in a temp dir)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*-blx.bib
+
+# OS
+.DS_Store
+
+# Private real CV data (never push)
+cv_data.private/
+.claude/
+cv_data copy/
