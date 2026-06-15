@@ -7,6 +7,7 @@ from cvkit.generate import (
     DATE_W,
     _bib_keywords,
     _font_lines,
+    _format_costs,
     breakable_table,
     build_tex,
     event_table,
@@ -90,6 +91,20 @@ def test_breakable_table_repeats_header_via_endhead():
     out = "\n".join(breakable_table("|Y|", ["Col"], [["v"]]))
     assert r"\endhead" in out
     assert r"\textit{Col}" in out
+
+
+# ── grant cost currency conversion ─────────────────────────────────────────
+
+def test_format_costs_euro_appends_usd_at_rate():
+    out = _format_costs(r"20{,}000\,€")
+    assert r"20{,}000\,€" in out                       # original kept verbatim
+    assert r"\$22{,}000" in out                        # 20000 * 1.1, grouped
+    assert "converted from euro at a 1.1 exchange rate" in out
+
+
+def test_format_costs_non_euro_passes_through():
+    assert _format_costs(r"\$50{,}000") == r"\$50{,}000"
+    assert _format_costs("N/A") == "N/A"
 
 
 # ── bibliography category logic (regression for the refs.bib path bug) ──────

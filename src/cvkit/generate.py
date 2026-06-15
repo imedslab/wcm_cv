@@ -524,6 +524,33 @@ def sec_i(d: dict) -> str:
 
 # ── Section J: Research ───────────────────────────────────────────────────
 
+# Grants are recorded in their award currency. Euro amounts are reported with a
+# USD equivalent so the WCM "Annual direct costs" line is dollar-denominated; the
+# conversion is noted inline rather than silently overwriting the original.
+EUR_USD_RATE = 1.1
+
+
+def _thousands(n: int) -> str:
+    """Group an integer with LaTeX-safe thousands separators (12345 -> 12{,}345)."""
+    return f"{n:,}".replace(",", "{,}")
+
+
+def _format_costs(costs: str) -> str:
+    """Render a grant's annual direct costs. Euro amounts (the string contains €)
+    get their USD equivalent appended at EUR_USD_RATE, noting the conversion; any
+    other value (already-USD, "N/A", etc.) passes through verbatim."""
+    if "€" not in costs:
+        return costs
+    # Strip LaTeX dressing (thousands {,}, thin spaces \,, the € glyph) to the digits.
+    amount = re.sub(r"[^0-9.]", "", costs.replace("{,}", "").replace(r"\,", ""))
+    if not amount:
+        return costs
+    usd = round(float(amount) * EUR_USD_RATE)
+    rate = f"{EUR_USD_RATE:g}"
+    return (costs + r" ($\approx$ \$" + _thousands(usd)
+            + ", converted from euro at a " + rate + " exchange rate)")
+
+
 def sec_j(d: dict) -> str:
     r = d["research"]
     lines = [r"\cvsection{M}{RESEARCH}"]
@@ -553,7 +580,7 @@ def sec_j(d: dict) -> str:
             r"\grantblock"
             + "{" + g["source"] + "}"
             + "{" + g["title"] + "}"
-            + "{" + g["costs"] + "}"
+            + "{" + _format_costs(g["costs"]) + "}"
             + "{" + g["duration"] + "}"
             + "{" + g["pi"] + "}"
             + "{" + g["role"] + "}"
@@ -571,7 +598,7 @@ def sec_j(d: dict) -> str:
                 r"\grantblock"
                 + "{" + g["source"] + "}"
                 + "{" + g["title"] + "}"
-                + "{" + g["costs"] + "}"
+                + "{" + _format_costs(g["costs"]) + "}"
                 + "{" + g["duration"] + "}"
                 + "{" + g["pi"] + "}"
                 + "{" + g["role"] + "}"
