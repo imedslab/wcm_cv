@@ -1,43 +1,60 @@
 # cvkit — Weill Cornell Medicine faculty CV builder
 
-`cvkit` turns a folder of plain JSON files (plus one BibTeX file) into a
-polished, WCM-template XeLaTeX CV — PDF out, no LaTeX wrangling.
+Turn a folder of JSON files (+ one BibTeX file) into a polished, WCM-template
+XeLaTeX CV. You edit data, not LaTeX; `cvkit` emits the PDF.
 
-- **Your data lives separately from the code.** Edit JSON, not `.tex`.
-- **Compilation is hermetic.** Every LaTeX run happens in a throwaway temp
-  directory; only the finished PDF (and `.tex`) land in your output folder.
-- **One command:** `uv run compile_cv --data cv_data --out cv_out`.
+`cvkit` ships as a prebuilt image at **`ghcr.io/imedslab/cvkit:latest`** (rebuilt
+by CI on every push here), so the normal way to use it needs **no local install**
+— see below.
 
-## Requirements
+## Get your own CV (recommended — zero local setup)
 
-- [`uv`](https://docs.astral.sh/uv/)
-- A TeX distribution providing **`xelatex`** and **`bibtex`** (TeX Live / MacTeX).
-- The CV font (default **FreeSans**, GNU FreeFont). Either install it
-  system-wide, or point `meta.json`'s `font_path` at a folder of font files
-  (see *Fonts* below).
+Keep your CV in its *own* repo holding only your data plus one workflow that
+pulls the image. No LaTeX, no Python, no build step:
 
-## Quick start
+1. Create a new repo and add a `cv_data/` folder (copy this repo's `cv_data/` as
+   a starting point — it's a working example).
+2. Copy [`examples/cv-repo-workflow.yml`](examples/cv-repo-workflow.yml) into it
+   as `.github/workflows/cv.yml`.
+3. Edit `cv_data/`, commit, push.
 
-```bash
-uv sync                                     # create the env + install cvkit
-uv run compile_cv --data cv_data --out cv_out
-open cv_out/cv.pdf                           # macOS (xdg-open on Linux)
+That's it. Every push compiles the CV, and the freshest PDF is always at:
+
+```
+https://github.com/<you>/<repo>/releases/latest/download/cv.pdf
 ```
 
-`make pdf` does the same thing.
+New repos have Actions on by default, so there's nothing else to configure.
+(One-time, on *this* repo only: make the `cvkit` GHCR package **public** so it
+pulls without auth.)
 
-### Or with Docker (no local TeX needed)
+## Editing the data
 
-The image bundles TeX Live + FreeSans + `cvkit`; mount your data and an output dir:
+`cv_data/` is the only thing you personalise: one JSON file per CV section, plus
+`refs.bib` for the publication list. Strings are LaTeX-ready, so write `\&`,
+`5\%`, `--`, etc. directly. The "Date of Preparation" is always the build date.
+
+See [`CLAUDE.md`](CLAUDE.md) for the section→file map, the JSON conventions, and
+how to add grants / mentees / publications.
+
+## Build locally (optional)
+
+To compile on your own machine you need [`uv`](https://docs.astral.sh/uv/) and a
+TeX distribution with `xelatex` + `bibtex` (TeX Live / MacTeX):
 
 ```bash
-docker build -t cvkit .
-docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" cvkit
+uv sync                                        # one-time: env + install cvkit
+uv run compile_cv --data cv_data --out cv_out  # → cv_out/cv.pdf  (also: make pdf)
 ```
 
-Your `meta.json` stays portable: an absolute `font_path` is used on your own
-machine but ignored inside the container (which falls back to the system
-FreeSans), so the same data builds in both places.
+No local TeX? Use the same image the cloud build uses — it bundles everything:
+
+```bash
+docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" ghcr.io/imedslab/cvkit:latest
+```
+
+Compilation is hermetic: each LaTeX run happens in a throwaway temp dir, and only
+`cv.pdf` (+ `cv.tex`) land in `--out`.
 
 ### CLI
 
@@ -45,58 +62,33 @@ FreeSans), so the same data builds in both places.
 compile_cv --data DIR --out DIR [--name NAME] [--tex-only] [--keep-tmp]
 ```
 
-| flag         | meaning                                                         |
-|--------------|----------------------------------------------------------------|
-| `--data`     | folder with the CV's `*.json` files **and** the `*.bib` (default `cv_data`) |
-| `--out`      | folder for the compiled `NAME.pdf` (default `cv_out`)          |
-| `--name`     | output basename, e.g. `cv` → `cv.pdf` (default `cv`)           |
-| `--tex-only` | generate the `.tex` only, skip the LaTeX run                   |
-| `--keep-tmp` | keep the temporary build dir (for debugging LaTeX errors)     |
-
-## Repository layout
-
-```
-src/cvkit/        # the package (the reusable tool)
-  generate.py     #   JSON  -> LaTeX string  (load_data, build_tex)
-  compile.py      #   LaTeX string -> PDF, compiled in a temp dir
-  cli.py          #   the `compile_cv` command
-cv_data/          # YOUR data — one JSON file per CV section + refs.bib
-cv_out/           # build output (git-ignored)
-pyproject.toml    # uv / packaging
-```
-
-## Suggested workflow
-
-1. This repo is the **example**. Fork/clone it (keep it **private**).
-2. Edit the files under `cv_data/` — one JSON per section, plus `refs.bib` for
-   the publication list. Strings are LaTeX-ready (write `\&`, `5\%`, `--`, …).
-3. `uv run compile_cv --data cv_data --out cv_out` whenever you want a fresh PDF.
-
-The data folder is the only thing you personalise; the package can be updated
-independently.
+| flag         | default   | meaning                                            |
+|--------------|-----------|----------------------------------------------------|
+| `--data`     | `cv_data` | folder with the `*.json` files **and** the `*.bib` |
+| `--out`      | `cv_out`  | output folder for the compiled PDF                 |
+| `--name`     | `cv`      | output basename (`cv` → `cv.pdf`)                  |
+| `--tex-only` | —         | write the `.tex` only, skip LaTeX                  |
+| `--keep-tmp` | —         | keep the temp build dir (to debug LaTeX errors)   |
 
 ## Fonts
 
-The CV uses **FreeSans** by default. In `cv_data/meta.json`:
+The CV uses **FreeSans** by default, set in `cv_data/meta.json`:
 
-- **System-installed font** (portable): omit `font_path` and `cvkit` will look
-  the family up by name.
-- **Explicit font files**: set `font_path` to a directory and `font_ext`
-  (`.otf`/`.ttf`); `cvkit` loads `FreeSans`, `FreeSansBold`, etc. from there.
+- **System font (portable):** omit `font_path`; `cvkit` looks the family up by name.
+- **Explicit files:** set `font_path` to a directory + `font_ext` (`.otf`/`.ttf`).
 
-## Editing the data
+A `font_path` that doesn't exist is ignored, so an absolute macOS path falls back
+to the system FreeSans inside Docker/CI — the same `meta.json` builds everywhere.
 
-See `CLAUDE.md` for the JSON conventions, the section→file map, and the table
-helpers. The Date of Preparation is always the compile date (`\today`).
+## Developing cvkit
 
-## Tests
+This repo is the tool. `src/cvkit/` is the package (`generate.py` = JSON→LaTeX,
+`compile.py` = LaTeX→PDF, `cli.py` = the command). `ci.yml` runs the tests,
+builds the image, smoke-tests it on the demo `cv_data/`, and pushes
+`ghcr.io/<owner>/cvkit:latest` from `main`.
 
 ```bash
-uv run pytest                      # everything
-uv run pytest -m "not integration" # fast unit tests only (no LaTeX needed)
-uv run pytest -m integration       # end-to-end: actually compiles PDFs
+uv run pytest                       # everything
+uv run pytest -m "not integration"  # fast unit tests (no TeX)
+uv run pytest -m integration        # end-to-end: actually compiles PDFs
 ```
-
-Unit tests cover the JSON→LaTeX generation (`generate.py`) and the compile
-error paths; integration tests (skipped automatically if `xelatex`/`bibtex`
-are not installed) compile both a trivial document and the real `cv_data/`.

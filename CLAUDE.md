@@ -22,8 +22,15 @@ docker build -t cvkit .
 docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" cvkit
 ```
 
-`.github/workflows/ci.yml` runs the unit tests on every push and (separately)
-builds the image, compiles `cv_data/`, and uploads `cv.pdf` as an artifact.
+`.github/workflows/ci.yml` runs the unit tests, builds the Docker image,
+smoke-tests it by compiling the demo `cv_data/`, and (only on `main`) pushes it
+to GHCR as `ghcr.io/<owner>/cvkit:latest` using the built-in `GITHUB_TOKEN`
+(`packages: write`). End users don't build anything: their CV lives in a separate
+data-only repo whose workflow just `docker run`s that prebuilt image — see
+`examples/cv-repo-workflow.yml`, the drop-in `.github/workflows/cv.yml` that
+compiles `cv_data/` and publishes the PDF to a rolling `latest` GitHub Release
+(`…/releases/latest/download/cv.pdf`). The GHCR package must be made public once
+so the data repo can pull it without auth.
 `meta.json`'s `font_path` is honoured only if it's a real directory, so the same
 data is portable between the Mac (explicit path) and the container (system FreeSans).
 
@@ -152,6 +159,10 @@ optional. Run `make pdf`.
   "goals": "The major goals are …"
 }
 ```
+`costs` is the **annual direct costs**. If the value contains a euro sign (`€`),
+`_format_costs` in `generate.py` appends the USD equivalent at `EUR_USD_RATE`
+(1.1), e.g. `20{,}000\,€` renders as `20{,}000\,€ (≈ $22,000, converted from euro
+at a 1.1 exchange rate)`. Already-USD or `N/A` values pass through unchanged.
 
 **New mentee** — append to `mentoring.current_mentees` or `mentoring.past_mentees` in `K_mentoring.json`.
 

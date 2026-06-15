@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Fast: pure-Python unit tests, no TeX needed.
+  # Pure-Python unit tests, no TeX needed.
   test:
     runs-on: ubuntu-latest
     steps:
@@ -17,22 +17,27 @@ jobs:
       - run: uv sync
       - run: uv run pytest -m "not integration"
 
-  # Full: build the TeX-Live image, compile the real CV, publish the PDF.
-  build-pdf:
+  # Build the image, prove it compiles the demo CV, and publish it to GHCR
+  # (only on the default branch) so data repos can just pull and run it.
+  image:
+    needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Build image
         run: docker build -t cvkit .
-      - name: Compile CV
+      - name: Smoke-test — compile the demo CV with the fresh image
         run: |
           mkdir -p out
-          docker run --rm \
-            -v "$PWD/cv_data:/data" \
-            -v "$PWD/out:/out" \
-            cvkit
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cv-pdf
-          path: out/cv.pdf
-          if-no-files-found: error
+          docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/out:/out" cvkit
+          test -f out/cv.pdf
+      - name: Push to GHCR
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          image="ghcr.io/${{ github.repository_owner }}/cvkit"
+          docker tag cvkit "$image:latest"
+          docker push "$image:latest"
