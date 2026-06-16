@@ -35,6 +35,10 @@ def main(argv: list[str] | None = None) -> int:
         "--keep-tmp", action="store_true",
         help="keep the temporary LaTeX build directory (for debugging)",
     )
+    parser.add_argument(
+        "--no-flatten", dest="flatten", action="store_false",
+        help="skip the Ghostscript layer-flattening pass on the finished PDF",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -55,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         pdf = compile_pdf(
             tex, args.data, args.out,
-            jobname=args.name, keep_tmp=args.keep_tmp,
+            jobname=args.name, keep_tmp=args.keep_tmp, flatten=args.flatten,
         )
     except (LatexNotFound, LatexCompileError) as exc:
         print(f"error: {exc}", file=sys.stderr)

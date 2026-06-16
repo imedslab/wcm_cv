@@ -45,6 +45,15 @@ inside a `tempfile.mkdtemp()` dir, then copies only `cv.pdf` (+ `cv.tex`) into
 on PATH (the §S Bibliography uses **biblatex with the bibtex backend** — `biber`
 is not required).
 
+Before copying the PDF out, `compile_pdf` runs a **Ghostscript flattening pass**
+(`_flatten_pdf`): the finished PDF is re-distilled through `gs … -sDEVICE=pdfwrite
+-dPDFSETTINGS=/prepress` to collapse XeLaTeX's transparency/optional-content
+layers into a single flat stream, maximising compatibility with older viewers,
+print RIPs and ATS résumé parsers. It's **best-effort** — if `gs` isn't on PATH
+the pass is skipped with a warning and the unflattened PDF is used. Pass
+`--no-flatten` (or `flatten=False`) to skip it. The Docker image bundles
+`ghostscript`; locally install it (`brew install ghostscript`).
+
 ## File layout
 
 ```

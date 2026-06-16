@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         texlive-bibtex-extra \
         texlive-fonts-recommended \
         fonts-freefont-otf \
+        ghostscript \
     && rm -rf /var/lib/apt/lists/*
 
 # uv, copied straight from its official image (no pip needed).

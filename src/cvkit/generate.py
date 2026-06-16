@@ -283,7 +283,7 @@ def title_page(d: dict) -> str:
         r"  \textbf{Faculty Curriculum Vitae}\\[8pt]",
         r"  \begin{tabular}{@{}ll@{}}",
         r"    \textbf{Name:}               & " + m["name"] + r" \\[2pt]",
-        r"    \textbf{Signature:}          & \\[6pt]",
+        r"    \textbf{Signature:}          & \\[8pt]",
         # Always the compile date (\today), so it self-updates on every rebuild.
         r"    \textbf{Date of Preparation:}& \today \\",
         r"  \end{tabular}",

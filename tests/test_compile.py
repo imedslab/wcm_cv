@@ -52,6 +52,53 @@ def test_temp_build_dir_is_removed_even_on_failure(tmp_path, monkeypatch):
     assert not os.path.exists(created["dir"])  # cleaned up by the finally: block
 
 
+# ── Ghostscript flattening (subprocess monkeypatched) ──────────────────────
+
+def test_flatten_invokes_ghostscript(tmp_path, monkeypatch):
+    calls = []
+
+    def fake(cmd, cwd=None, **kw):
+        calls.append(cmd[0])
+        if cmd[0] == "xelatex":
+            (cwd / "cv.pdf").write_bytes(b"%PDF-xelatex")
+        elif cmd[0] == "gs":
+            out = next(a.split("=", 1)[1] for a in cmd if a.startswith("-sOutputFile="))
+            (cwd / out).write_bytes(b"%PDF-flat")
+        return type("R", (), {"returncode": 0, "stdout": ""})()
+
+    monkeypatch.setattr("cvkit.compile.subprocess.run", fake)
+    pdf = compile_pdf(TRIVIAL_TEX, tmp_path / "data", tmp_path / "out")
+    assert "gs" in calls
+    assert pdf.read_bytes() == b"%PDF-flat"  # the flattened file was copied out
+
+
+def test_flatten_falls_back_when_ghostscript_missing(tmp_path, monkeypatch):
+    def fake(cmd, cwd=None, **kw):
+        if cmd[0] == "gs":
+            raise FileNotFoundError("gs")
+        if cmd[0] == "xelatex":
+            (cwd / "cv.pdf").write_bytes(b"%PDF-xelatex")
+        return type("R", (), {"returncode": 0, "stdout": ""})()
+
+    monkeypatch.setattr("cvkit.compile.subprocess.run", fake)
+    pdf = compile_pdf(TRIVIAL_TEX, tmp_path / "data", tmp_path / "out")
+    assert pdf.read_bytes() == b"%PDF-xelatex"  # gracefully used the original
+
+
+def test_no_flatten_skips_ghostscript(tmp_path, monkeypatch):
+    calls = []
+
+    def fake(cmd, cwd=None, **kw):
+        calls.append(cmd[0])
+        if cmd[0] == "xelatex":
+            (cwd / "cv.pdf").write_bytes(b"%PDF-xelatex")
+        return type("R", (), {"returncode": 0, "stdout": ""})()
+
+    monkeypatch.setattr("cvkit.compile.subprocess.run", fake)
+    compile_pdf(TRIVIAL_TEX, tmp_path / "data", tmp_path / "out", flatten=False)
+    assert "gs" not in calls
+
+
 # ── real compilation (skipped without xelatex/bibtex) ──────────────────────
 
 @requires_latex
