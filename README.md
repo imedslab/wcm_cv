@@ -103,3 +103,13 @@ uv run pytest                       # everything
 uv run pytest -m "not integration"  # fast unit tests (no TeX)
 uv run pytest -m integration        # end-to-end: actually compiles PDFs
 ```
+
+## Disclaimer
+
+This is an independent, unofficial project. It is **not** an official repository
+of Weill Cornell Medicine, is not endorsed or sponsored by it, and does not
+represent its views, values, or positions. The CV template here is a community
+reproduction of the publicly available layout. Weill Cornell Medicine and its
+affiliates bear no responsibility for this software or for any content produced
+with it. All trademarks and names are the property of their respective owners.
+The software is provided "as is", without warranty of any kind.
