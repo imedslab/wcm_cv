@@ -1,9 +1,13 @@
-# cvkit — Weill Cornell Medicine faculty CV builder
+<p align="center">
+  <img src="assets/banner.jpeg" alt="WCM CV Kit" width="100%">
+</p>
 
-Turn a folder of JSON files (+ one BibTeX file) into a polished, WCM-template
-XeLaTeX CV. You edit data, not LaTeX; `cvkit` emits the PDF.
+<h1 align="center">WCM CV Kit</h1>
 
-`cvkit` ships as a prebuilt image at **`ghcr.io/imedslab/cvkit:latest`** (rebuilt
+<p align="center"><i>Turn a folder of JSON files (+ one BibTeX file) into a polished,
+WCM-template XeLaTeX CV. You edit data, not LaTeX; the kit emits the PDF.</i></p>
+
+WCM CV Kit ships as a prebuilt image at **`ghcr.io/imedslab/cvkit:latest`** (rebuilt
 by CI on every push here), so the normal way to use it needs **no local install**
 — see below. See the output it produces in the
 [sample CV](https://github.com/imedslab/wcm_cv/releases/download/sample-latest/cv.pdf),
@@ -32,7 +36,7 @@ New repos have Actions on by default, so there's nothing else to configure. The
 
 **Optional — support the project:** add a repo secret `CVKIT_STAR_TOKEN` (a
 classic GitHub PAT with the `public_repo` scope) and each build stars this repo,
-so its author can gauge how many people use `cvkit`. The step self-skips if the
+so its author can gauge how many people use WCM CV Kit. The step self-skips if the
 secret is absent. Note that GitHub stars are public.
 
 ## Editing the data
@@ -87,7 +91,7 @@ The CV uses **FreeSans** by default, set in `cv_data/meta.json`:
 A `font_path` that doesn't exist is ignored, so an absolute macOS path falls back
 to the system FreeSans inside Docker/CI — the same `meta.json` builds everywhere.
 
-## Developing cvkit
+## Developing WCM CV Kit
 
 This repo is the tool. `src/cvkit/` is the package (`generate.py` = JSON→LaTeX,
 `compile.py` = LaTeX→PDF, `cli.py` = the command). `ci.yml` runs the tests,
