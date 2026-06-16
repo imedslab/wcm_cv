@@ -25,9 +25,11 @@ docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" ghcr.io/imedslab/c
 the package or the Dockerfile; CI builds and pushes the image from `main`.)
 
 `.github/workflows/ci.yml` runs the unit tests, builds the Docker image,
-smoke-tests it by compiling the demo `cv_data/`, and (only on `main`) pushes it
-to GHCR as `ghcr.io/<owner>/cvkit:latest` using the built-in `GITHUB_TOKEN`
-(`packages: write`). End users don't build anything: their CV lives in a separate
+compiles the sample CV from `cv_data/` with it (uploaded as the `sample-cv`
+artifact every run), and (only on `main`) pushes the image to GHCR as
+`ghcr.io/<owner>/cvkit:latest` using the built-in `GITHUB_TOKEN`
+(`packages: write`) and publishes the sample CV to the `sample-latest` release
+(`…/releases/download/sample-latest/cv.pdf`, needs `contents: write`). End users don't build anything: their CV lives in a separate
 data-only repo whose workflow just `docker run`s that prebuilt image — see
 `examples/cv-repo-workflow.yml`, the drop-in `.github/workflows/cv.yml` that
 compiles `cv_data/` and publishes the PDF to a rolling `latest` GitHub Release

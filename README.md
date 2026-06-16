@@ -5,7 +5,9 @@ XeLaTeX CV. You edit data, not LaTeX; `cvkit` emits the PDF.
 
 `cvkit` ships as a prebuilt image at **`ghcr.io/imedslab/cvkit:latest`** (rebuilt
 by CI on every push here), so the normal way to use it needs **no local install**
-— see below.
+— see below. See the output it produces in the
+[sample CV](https://github.com/imedslab/wcm_cv/releases/download/sample-latest/cv.pdf),
+which CI compiles from `cv_data/` on every push.
 
 ## Get your own CV (recommended — zero local setup)
 

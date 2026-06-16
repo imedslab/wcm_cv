@@ -17,23 +17,29 @@ jobs:
       - run: uv sync
       - run: uv run pytest -m "not integration"
 
-  # Build the image, prove it compiles the demo CV, and publish it to GHCR
-  # (only on the default branch) so data repos can just pull and run it.
+  # Build the image, compile the sample CV with it, then (on the default branch)
+  # push the image to GHCR and publish the sample CV as a release.
   image:
     needs: test
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      contents: write   # publish the sample CV release
+      packages: write   # push the image to GHCR
     steps:
       - uses: actions/checkout@v4
       - name: Build image
         run: docker build -t cvkit .
-      - name: Smoke-test — compile the demo CV with the fresh image
+      - name: Compile the sample CV with the fresh image
         run: |
           mkdir -p out
           docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/out:/out" cvkit
           test -f out/cv.pdf
+      - name: Upload the sample CV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-cv
+          path: out/cv.pdf
+          if-no-files-found: error
       - name: Push to GHCR
         if: github.ref == 'refs/heads/main'
         run: |
@@ -41,3 +47,10 @@ jobs:
           image="ghcr.io/${{ github.repository_owner }}/cvkit"
           docker tag cvkit "$image:latest"
           docker push "$image:latest"
+      - name: Publish the sample CV to the "latest" release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: sample-latest
+          name: Sample CV (latest)
+          files: out/cv.pdf
