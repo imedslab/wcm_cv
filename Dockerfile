@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1
 #
 # Self-contained CV builder: TeX Live (xelatex + bibtex) + FreeSans + uv + cvkit.
-# Your data is NOT baked in — mount it at runtime:
+# Your data is NOT baked in — mount it at runtime. CI publishes this image, so
+# normally you just pull it; only build locally when changing the package:
 #
-#   docker build -t cvkit .
-#   docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" cvkit
+#   docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" ghcr.io/imedslab/cvkit:latest
+#   docker build -t cvkit .   # local build (when editing cvkit / this Dockerfile)
 #
 FROM debian:bookworm-slim
 

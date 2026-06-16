@@ -14,13 +14,15 @@ make tex                                        # write cv_out/cv.tex only (no L
 uv run pytest                                   # tests (see `tests/`)
 ```
 
-No local TeX? Use the Docker image (TeX Live + FreeSans + cvkit baked in; data
-mounted at runtime):
+No local TeX? Pull the prebuilt image (TeX Live + FreeSans + cvkit baked in; data
+mounted at runtime) — no local build needed:
 
 ```bash
-docker build -t cvkit .
-docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" cvkit
+docker run --rm -v "$PWD/cv_data:/data" -v "$PWD/cv_out:/out" ghcr.io/imedslab/cvkit:latest
 ```
+
+(Building it yourself — `docker build -t cvkit .` — is only needed when changing
+the package or the Dockerfile; CI builds and pushes the image from `main`.)
 
 `.github/workflows/ci.yml` runs the unit tests, builds the Docker image,
 smoke-tests it by compiling the demo `cv_data/`, and (only on `main`) pushes it
