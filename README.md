@@ -9,8 +9,9 @@ by CI on every push here), so the normal way to use it needs **no local install*
 
 ## Get your own CV (recommended — zero local setup)
 
-Keep your CV in its *own* repo holding only your data plus one workflow that
-pulls the image. No LaTeX, no Python, no build step:
+Keep your CV in its own (private) repo holding only your data plus one workflow
+that pulls the public image. Your data stays private; no LaTeX, no Python, no
+build step:
 
 1. Create a new repo and add a `cv_data/` folder (copy this repo's `cv_data/` as
    a starting point — it's a working example).
@@ -24,9 +25,13 @@ That's it. Every push compiles the CV, and the freshest PDF is always at:
 https://github.com/<you>/<repo>/releases/latest/download/cv.pdf
 ```
 
-New repos have Actions on by default, so there's nothing else to configure.
-(One-time, on *this* repo only: make the `cvkit` GHCR package **public** so it
-pulls without auth.)
+New repos have Actions on by default, so there's nothing else to configure. The
+`cvkit` image is public, so the pull needs no auth even from a private repo.
+
+**Optional — support the project:** add a repo secret `CVKIT_STAR_TOKEN` (a
+classic GitHub PAT with the `public_repo` scope) and each build stars this repo,
+so its author can gauge how many people use `cvkit`. The step self-skips if the
+secret is absent. Note that GitHub stars are public.
 
 ## Editing the data
 

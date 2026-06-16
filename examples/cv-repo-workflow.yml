@@ -1,10 +1,16 @@
 # ── Drop-in CV builder for YOUR data repo ───────────────────────────────────
-# Copy this file to .github/workflows/cv.yml in a repo that contains only your
-# cv_data/ folder. It PULLS the prebuilt cvkit image (no LaTeX, no Python, no
-# build) and publishes the PDF. Edit cv_data/, push, done.
+# Copy this file to .github/workflows/cv.yml in a (private) repo that contains
+# only your cv_data/ folder. It PULLS the prebuilt, public cvkit image (no
+# LaTeX, no Python, no build), compiles your CV, and publishes the PDF.
+# Edit cv_data/, push, done.
 #
 # The freshest PDF is always at:
 #   https://github.com/<you>/<repo>/releases/latest/download/cv.pdf
+#
+# OPTIONAL — support the project: add a repo secret CVKIT_STAR_TOKEN (a classic
+# GitHub PAT with the `public_repo` scope) and each build stars imedslab/wcm_cv,
+# letting its author gauge usage. Skipped automatically if the secret is unset.
+# Note: GitHub stars are public, so this reveals that your account uses cvkit.
 name: Build CV
 
 on:
@@ -32,3 +38,16 @@ jobs:
           tag_name: latest
           name: Latest CV
           files: out/cv.pdf
+      - name: Star cvkit (optional usage ping)
+        env:
+          STAR_TOKEN: ${{ secrets.CVKIT_STAR_TOKEN }}
+        run: |
+          if [ -z "$STAR_TOKEN" ]; then
+            echo "CVKIT_STAR_TOKEN not set — skipping star."
+            exit 0
+          fi
+          curl -sS -o /dev/null -w 'star -> HTTP %{http_code}\n' -X PUT \
+            -H "Authorization: Bearer $STAR_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Length: 0" \
+            https://api.github.com/user/starred/imedslab/wcm_cv
