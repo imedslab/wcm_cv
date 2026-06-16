@@ -280,10 +280,10 @@ def title_page(d: dict) -> str:
         r"\thispagestyle{empty}",
         r"\begin{center}",
         r"  \textbf{Weill Cornell Medical College, Cornell University}\\",
-        r"  \textbf{Faculty Curriculum Vitae Template}\\[8pt]",
+        r"  \textbf{Faculty Curriculum Vitae}\\[8pt]",
         r"  \begin{tabular}{@{}ll@{}}",
         r"    \textbf{Name:}               & " + m["name"] + r" \\[2pt]",
-        r"    \textbf{Signature:}          & \\[2pt]",
+        r"    \textbf{Signature:}          & \\[6pt]",
         # Always the compile date (\today), so it self-updates on every rebuild.
         r"    \textbf{Date of Preparation:}& \today \\",
         r"  \end{tabular}",
